@@ -22,7 +22,7 @@ This module is currently *under construction*
     // change our locale to es
     dialect.config('locale', 'es');
 
-Translate
+### Translate
 
     console.log(dialect.translate('Hello World!')); // MongoDB (it caches to a JSON file)
     // => 'Hola Mundo'
@@ -35,7 +35,7 @@ Translate
     // => 'Hola Mundo'
 
 
-Count
+### Count
 
     [1, 2, 3].forEach(function (count) {
       console.log(dialect.translate([
@@ -49,7 +49,7 @@ Count
     // => 'Hola Mundos'
 
 
-Context
+### Context
 
     ['female', 'male'].forEach(function (gender) {
       console.log(dialect.translate([
@@ -61,7 +61,7 @@ Context
     // => 'Mis amigos'
 
 
-Count + Context + String interpolation
+### Count + Context + String interpolation
 
     [1, 2].forEach(function (count) {
       ['female', 'male'].forEach(function (gender) {
