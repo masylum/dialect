@@ -22,6 +22,7 @@ This module is currently *under construction*
     // change our locale to es
     dialect.config('locale', 'es');
 
+Translate
 
     console.log(dialect.translate('Hello World!')); // MongoDB (it caches to a JSON file)
     // => 'Hola Mundo'
@@ -34,7 +35,8 @@ This module is currently *under construction*
     // => 'Hola Mundo'
 
 
-    // count
+Count
+
     [1, 2, 3].forEach(function (count) {
       console.log(dialect.translate([
         'Hello World',
@@ -47,7 +49,8 @@ This module is currently *under construction*
     // => 'Hola Mundos'
 
 
-    // context
+Context
+
     ['female', 'male'].forEach(function (gender) {
       console.log(dialect.translate([
         'My friends',
@@ -58,7 +61,8 @@ This module is currently *under construction*
     // => 'Mis amigos'
 
 
-    // count + context + string interpolation
+Count + Context + String interpolation
+
     [1, 2].forEach(function (count) {
       ['female', 'male'].forEach(function (gender) {
         console.log(dialect.translate([
