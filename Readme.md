@@ -66,13 +66,13 @@ This module is currently *under construction*
     [1, 2].forEach(function (count) {
       ['female', 'male'].forEach(function (gender) {
         console.log(dialect.translate([
-          'You have {count} {what}',
-          'You have {count} {what}',
-          {count: count, context: context, what: 'friends'}
+          'You have {count} {what} friend',
+          'You have {count} {what} friends',
+          {count: count, context: context, what: 'good'}
         ]));
       });
     });
-    // => 'Mi amiga'
-    // => 'Mi amigo'
-    // => 'Mis amigas'
-    // => 'Mis amigos'
+    // => 'Tengo 1 buena amiga'
+    // => 'Tengo 1 buen amigo'
+    // => 'Tengo 2 buenas amigas'
+    // => 'Tengo 2 buenos amigos'

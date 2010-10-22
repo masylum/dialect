@@ -1,0 +1,3 @@
+[submodule "support/funk"]
+	path = support/funk
+	url = git@github.com:masylum/funk.git
