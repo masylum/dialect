@@ -76,3 +76,11 @@ This module is currently *under construction*
     // => 'Tengo 1 buen amigo'
     // => 'Tengo 2 buenas amigas'
     // => 'Tengo 2 buenos amigos'
+
+## Test
+
+Dialect is heavily tested using Vows.
+
+    npm install vows
+
+    vows test/*_test.js --spec
