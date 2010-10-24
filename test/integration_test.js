@@ -20,7 +20,7 @@ var fs = require('fs'),
 
     exit = function () {
       exits += 1;
-      if (exits === 3) {
+      if (exits === 4) {
         inspect('Tests finshed!');
         inspect(passed_tests + '/' + num_tests);
         process.exit(0);
@@ -277,8 +277,9 @@ var fs = require('fs'),
         // THEN it should save it to the Store, JSON and Memory for each locale as NULL
         // ============================================================================
         dialect.config('locales').forEach(function (locale) {
+
+          // DB
           dialect.config('store').get({original: original[0], locale: locale}, fk.add(function (err, data) {
-            // DB
             test(assert.equal, [data[0].locale, locale]);
             test(assert.equal, [data[0].original, original[0]]);
             test(assert.equal, [data[0].count, 'singular']);
@@ -292,7 +293,6 @@ var fs = require('fs'),
           }));
 
           dialect.config('store').get({original: original[1], locale: locale}, fk.add(function (err, data) {
-            // DB
             test(assert.equal, [data[0].locale, locale]);
             test(assert.equal, [data[0].original, original[1]]);
             test(assert.equal, [data[0].count, 'plural']);
@@ -305,20 +305,31 @@ var fs = require('fs'),
             }
           }));
 
-/*
-            // JSON
-            if (locale === dialect.config('base_locale')) {
-              test(assert.equal, [original, JSON.parse(fs.readFileSync(dialect.config('path') + locale + '.js').toString())[original]]);
-            } else {
-              test(assert.equal, [JSON.parse(fs.readFileSync(dialect.config('path') + locale + '.js').toString())[original], null]);
-            }
+          // JSON
+          (function () {
+            var path = dialect.config('path') + locale + '.js',
+                json = JSON.parse(fs.readFileSync(path).toString());
 
-            // Memory (Missing translations always get same str)
-            test(assert.equal, [dialect.getTranslation(original), original]);
-          */
+            test(assert.equal, [json[original[0]].count, 'singular']);
+            test(assert.equal, [json[original[0]].context, null]);
+            test(assert.equal, [json[original[1]].count, 'plural']);
+            test(assert.equal, [json[original[1]].context, null]);
+
+            if (locale === dialect.config('base_locale')) {
+              test(assert.equal, [json[original[0]].translation, original[0]]);
+              test(assert.equal, [json[original[1]].translation, original[1]]);
+            } else {
+              test(assert.equal, [json[original[0]].translation, null]);
+              test(assert.equal, [json[original[1]].translation, null]);
+            }
+          }());
+
+          // Memory (Missing translations always get same str)
+          test(assert.equal, [dialect.getTranslation(original), original]);
         });
 
         fk.parallel(function () {
+          exit();
         /*
 
           // WHEN a translator introduces a translation to a target locale
@@ -342,7 +353,6 @@ var fs = require('fs'),
               // Memory available on this local machine
               test(assert.equal, [dialect.getTranslation(original), translation]);
 
-              exit();
             });
           });
           */
