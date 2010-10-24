@@ -1,3 +1,9 @@
 [submodule "support/funk"]
 	path = support/funk
 	url = git@github.com:masylum/funk.git
+[submodule "support/minitest"]
+	path = support/minitest
+	url = http://github.com/botanicus/minitest.js.git
+[submodule "support/mongodb"]
+	path = support/mongodb
+	url = http://github.com/christkv/node-mongodb-native.git

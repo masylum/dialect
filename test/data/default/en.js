@@ -1,0 +1,4 @@
+{
+  "Chega": "Enough",
+  "de": "of"
+}

@@ -1,4 +1,1 @@
-module.exports = {
-  'Chega': 'Enough',
-  'de': 'of'
-};
+{"Chega":"Enough","de":"of","Os desafinados tamb\u00e9m t\u00eam um cora\u00e7\u00e3o":null}

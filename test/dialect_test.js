@@ -1,33 +1,40 @@
-GLOBAL.inspect = require('eyes').inspector({
-  styles: {                 // Styles applied to stdout
-    all:     'yellow',    // Overall style applied to everything
-    label:   'underline', // Inspection labels, like 'array' in `array: [1, 2, 3]`
-    other:   'inverted',  // Objects which don't have a literal representation, such as functions
-    key:     'bold',      // The keys in object literals, like 'a' in `{a: 1}`
+GLOBAL.inspect = require('eyes').inspector({ styles: { all:     'yellow', label:   'underline', other:   'inverted', key:     'bold', special: 'grey', string:  'green', number:  'red', bool:    'blue', regexp:  'green' }, maxLength: 9999999999 });
 
-    special: 'grey',      // null, undefined...
-    string:  'green',
-    number:  'red',
-    bool:    'blue',      // true false
-    regexp:  'green'      // /\d+/
-  },
-  maxLength: 9999999999
-});
-
-var suite = require('./../support/vows/lib/vows').describe('Dialect'),
+var suite = require('./../support/vows/lib/vows').describe('STORELESS DIALECT (JSON)'),
     assert = require('assert'),
-    dialect = require('./..').dialect({path: __dirname + '/data', base_locale: 'pt'});
+    fs = require('fs'),
+    dialect = require('./..').dialect({path: __dirname + '/data', base_locale: 'pt', locales: ['pt', 'es', 'en']});
 
-dialect.config('locale', 'es');
+dialect.config('current_locale', 'es');
 
-suite.
-addBatch({
+// Fill /data dictionaries
+(function () {
+  var json = '', i = null;
+  dialect.config('locales').forEach(function (locale) {
+    var data = fs.readFileSync(dialect.config('path') + 'default/' + locale + '.js', 'utf8').toString();
+    fs.writeFileSync(dialect.config('path') + locale + '.js', data, 'utf8');
+  });
+}());
+
+suite
+.addBatch({
+  'GIVEN an instance of dialect without a path param': {
+    topic : {},
+
+    'THEN it should raise an error': function (topic) {
+      assert.throws(function () {
+        require('./..').dialect(topic);
+      }, Error);
+    }
+  }
+})
+.addBatch({
   'GIVEN portuguese stuff to be translated': {
     'WHEN its a string': {
       topic: 'Chega',
 
       'THEN it returns the translation': function (topic) {
-        assert.equal(dialect.translate(topic), 'Basta');
+        assert.equal(dialect.getTranslation(topic), 'Basta');
       }
     },
 
@@ -35,7 +42,7 @@ addBatch({
       topic: '',
 
       'THEN it returns ""': function (topic) {
-        assert.equal(dialect.translate(topic), '');
+        assert.equal(dialect.getTranslation(topic), '');
       }
     },
 
@@ -44,16 +51,16 @@ addBatch({
 
       'THEN it returns ""': function (topic) {
         topic.forEach(function (element) {
-          assert.equal(dialect.translate(element), '');
+          assert.equal(dialect.getTranslation(element), '');
         });
       }
     },
 
-    'WHEN the string doesn\t have a translation': {
+    'WHEN the string doesn\'t have a translation': {
       topic: 'Saudade',
 
       'THEN it returns the same string': function (topic) {
-        assert.equal(dialect.translate(topic), 'Saudade');
+        assert.equal(dialect.getTranslation(topic), 'Saudade');
       }
     }
   }
@@ -64,11 +71,12 @@ addBatch({
       topic: 'Os desafinados também têm um coração',
 
       'THEN it should store the new translation': function (topic) {
-        assert.strictEqual(require(__dirname + '/data/es.js')[topic], undefined);
-        assert.strictEqual(require(__dirname + '/data/en.js')[topic], undefined);
-        assert.equal(dialect.translate(topic), 'Os desafinados também têm um coração');
-        assert.strictEqual(require(__dirname + '/data/es.js')[topic], null);
-        assert.strictEqual(require(__dirname + '/data/en.js')[topic], null);
+        assert.strictEqual(JSON.parse(fs.readFileSync(__dirname + '/data/en.js').toString())[topic], undefined);
+        assert.strictEqual(JSON.parse(fs.readFileSync(__dirname + '/data/es.js').toString())[topic], undefined);
+        assert.equal(dialect.getTranslation(topic), 'Os desafinados também têm um coração', function () {
+          assert.strictEqual(JSON.parse(fs.readFileSync(__dirname + '/data/en.js').toString())[topic], null);
+          assert.strictEqual(JSON.parse(fs.readFileSync(__dirname + '/data/es.js').toString())[topic], null);
+        });
       }
     },
 
@@ -76,7 +84,7 @@ addBatch({
       topic: '',
 
       'THEN it returns ""': function (topic) {
-        assert.equal(dialect.translate(topic), '');
+        assert.equal(dialect.getTranslation(topic), '');
       }
     },
 
@@ -85,7 +93,7 @@ addBatch({
 
       'THEN it returns ""': function (topic) {
         topic.forEach(function (element) {
-          assert.equal(dialect.translate(element), '');
+          assert.equal(dialect.getTranslation(element), '');
         });
       }
     }

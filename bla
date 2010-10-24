@@ -1,0 +1,3 @@
+M -> Hola ? Returns 'Hello : Create translation JSON
+JSON -> Hola ? Returns 'Hello : Create translation DB
+DB -> Hola ? Returns 'Hello' : Create translation 'NULL' and Returns

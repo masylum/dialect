@@ -1,6 +1,15 @@
+GLOBAL.inspect = require('eyes').inspector({ styles: { all:     'yellow', label:   'underline', other:   'inverted', key:     'bold', special: 'grey', string:  'green', number:  'red', bool:    'blue', regexp:  'green' }, maxLength: 9999999999 });
 var assert = require('assert');
 
-exports.common = require('./../helpers/stores')({store: 'mongodb', database: 'dev'});
+exports.getCleanDatabase = function (callback) {
+  require(__dirname + '/../..').store({store: 'mongodb', database: 'test'}, function (error, mongoStore) {
+    mongoStore.collection.remove({}, function (err, data) {
+      callback(null, mongoStore);
+    });
+  });
+};
+
+exports.common = require('./../helpers/stores')({store: 'mongodb', database: 'test'});
 
 exports.spec = {
   'GIVEN a new mongo store': {
@@ -15,7 +24,7 @@ exports.spec = {
     },
 
     'WHEN we try to instantiate it with a database': {
-      topic: [{store: 'mongodb', database: 'dev'}, function () {}],
+      topic: [{store: 'mongodb', database: 'test'}, function () {}],
 
       'THEN it should NOT raise an error': function (topic) {
         assert.doesNotThrow(function () {
@@ -27,27 +36,20 @@ exports.spec = {
 
   'GIVEN a correct mongo store': {
     topic: function () {
-      var self = this;
-      require('./../..').store({store: 'mongodb', database: 'dev'}, function (error, mongoStore) {
-        mongoStore.collection.remove();
-        self.callback(null, mongoStore);
-      });
+      exports.getCleanDatabase(this.callback);
     },
 
     'WHEN we INSERT a translation': {
       topic: function (mongoStore) {
-        var self = this;
-        mongoStore.set('Hello', 'Hola', 'es', function (err, data) {
-          self.callback(err, data, mongoStore);
-        });
+        mongoStore.set('Hello', 'Hola', 'es', this.callback);
       },
 
-      // CLEAN this. I still don't get how vow deals with async...
-      'THEN it should be inserted correctly to the database': function (error, element, mongoStore) {
-        mongoStore.get('Hello', 'es', function (err, data) {
-          assert.equal(data.locale, 'es');
-          assert.equal(data.original, 'Hello');
-          assert.equal(data.translation, 'Hola');
+      // CLEAN this rubish. I still don't get how vow deals with async...
+      'THEN it should be inserted correctly to the database': function (error, mongoStore) {
+        mongoStore.get({original: 'Hello', locale: 'es'}, function (err, data) {
+          assert.equal(data[0].locale, 'es');
+          assert.equal(data[0].original, 'Hello');
+          assert.equal(data[0].translation, 'Hola');
 
           var funk = require('./../../support/funk/lib/funk')();
 
@@ -60,10 +62,10 @@ exports.spec = {
           }));
 
           funk.parallel(function () {
-            mongoStore.destroy('Hello', 'es', function (err, data) {
+            mongoStore.destroy({original: 'Hello', locale: 'es'}, function (err, data) {
               // not found
-              mongoStore.get('Hello', 'es', function (err, data) {
-                assert.isUndefined(data);
+              mongoStore.get({original: 'Hello', locale: 'es'}, function (err, data) {
+                assert.isEmpty(data);
               });
 
               mongoStore.length('es', function (err, length) {

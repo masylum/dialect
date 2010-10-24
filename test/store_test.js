@@ -1,6 +1,6 @@
 GLOBAL.inspect = require('eyes').inspector({ styles: { all:     'yellow', label:   'underline', other:   'inverted', key:     'bold', special: 'grey', string:  'green', number:  'red', bool:    'blue', regexp:  'green' }, maxLength: 9999999999 });
 
-var suite = require('./../support/vows/lib/vows').describe('Store'),
+var suite = require('./../support/vows/lib/vows').describe('STORE'),
     assert = require('assert');
 
 suite
