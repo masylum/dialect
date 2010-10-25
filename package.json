@@ -1,0 +1,11 @@
+{
+  "name": "dialect",
+  "description": "I18n and L10n for nodejs",
+  "version": "0.0.1",
+  "author": "Pau Ramon <masylum@gmail.com>",
+  "keywords": ["i18n", "l10n"],
+  "dependencies": { "mongodb": ">=0.7.9", "funk": "0.0.1", "vows": "0.5.2", "eyes": "0.1.6"},
+  "repository" : {"type": "git" , "url": "http://github.com/masylum/dialect.git" },
+  "engines": { "node": ">= 0.2.0" }
+}
+

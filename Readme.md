@@ -4,6 +4,10 @@ Dialect is a painless nodejs library to deal with i18n, and L10n.
 
 This module is currently *under construction*
 
+## Install
+
+    npm install dialect
+
 ## Philosphy
 
 * Scalable: The translations should be available to any number of machines.
@@ -79,8 +83,6 @@ This module is currently *under construction*
 
 ## Test
 
-Dialect is heavily tested using Vows.
+Dialect is heavily tested using a mix of Vows and node asserts module.
 
-    npm install vows
-
-    vows test/*_test.js --spec
+    make test
