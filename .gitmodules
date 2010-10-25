@@ -4,3 +4,6 @@
 [submodule "support/mongodb"]
 	path = support/mongodb
 	url = http://github.com/christkv/node-mongodb-native.git
+[submodule "support/vows"]
+	path = support/vows
+	url = http://github.com/cloudhead/vows.git
