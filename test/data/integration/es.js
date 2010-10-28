@@ -1,1 +1,0 @@
-{"I love gazpacho":"Me encanta el gazpacho"}

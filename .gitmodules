@@ -7,3 +7,6 @@
 [submodule "support/vows"]
 	path = support/vows
 	url = http://github.com/cloudhead/vows.git
+[submodule "support/lingo"]
+	path = support/lingo
+	url = git@github.com:masylum/lingo.git

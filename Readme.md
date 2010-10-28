@@ -1,4 +1,12 @@
-# Dialect
+           ,,    ,,             ,,
+         `7MM    db           `7MM                    mm
+           MM                   MM                    MM
+      ,M""bMM  `7MM   ,6"Yb.    MM  .gP"Ya   ,p6"bo mmMMmm
+    ,AP    MM    MM  8)   MM    MM ,M'   Yb 6M'  OO   MM
+    8MI    MM    MM   ,pm9MM    MM 8M"""""" 8M        MM
+    `Mb    MM    MM  8M   MM    MM YM.    , YM.    ,  MM
+     `Wbmd"MML..JMML.`Moo9^Yo..JMML.`Mbmmd'  YMbmd'   `Mbmo
+
 
 Dialect is a painless nodejs library to deal with i18n, and L10n.
 
@@ -84,5 +92,7 @@ This module is currently *under construction*
 ## Test
 
 Dialect is heavily tested using a mix of Vows and node asserts module.
+
+    npm install eyes
 
     make test

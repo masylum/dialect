@@ -101,9 +101,15 @@ var fs = require('fs'),
 
             // JSON
             if (locale === dialect.config('base_locale')) {
-              test(assert.equal, [original, JSON.parse(fs.readFileSync(dialect.config('path') + locale + '.js').toString())[original]]);
+              test(assert.equal, [
+                original,
+                JSON.parse(fs.readFileSync(dialect.config('path') + locale + '.js').toString())[original].translation
+              ]);
             } else {
-              test(assert.equal, [JSON.parse(fs.readFileSync(dialect.config('path') + locale + '.js').toString())[original], null]);
+              test(assert.equal, [
+                JSON.parse(fs.readFileSync(dialect.config('path') + locale + '.js').toString())[original].translation,
+                null
+              ]);
             }
 
             // Memory (Missing translations always get same str)
@@ -129,7 +135,10 @@ var fs = require('fs'),
               test(assert.equal, [data[0].translation, translation]);
 
               // JSON available on this local machine, but on other they need to sync
-              test(assert.equal, [JSON.parse(fs.readFileSync(dialect.config('path') + locale + '.js').toString())[original], translation]);
+              test(assert.equal, [
+                JSON.parse(fs.readFileSync(dialect.config('path') + locale + '.js').toString())[original].translation,
+                translation
+              ]);
 
               // Memory available on this local machine
               test(assert.equal, [dialect.getTranslation(original), translation]);
@@ -161,7 +170,6 @@ var fs = require('fs'),
   // get Store and empty the DB
   require('./..').store({store: 'mongodb', database: 'test_2'}, function (error, store) {
     store.collection.remove({}, function (err, data) {
-
       // GIVEN a store
       // =============
       var original = 'E muito bom', translation = 'Esta molt be';
@@ -224,8 +232,14 @@ var fs = require('fs'),
         // THEN it should get it from DB files and populate JSON and memory again
         // ======================================================================
         translated_string = dialect.getTranslation(original, function (err, data) {
-          test(assert.equal, [JSON.parse(fs.readFileSync(dialect.config('path') + 'it.js').toString())[original], original]);
-          test(assert.equal, [JSON.parse(fs.readFileSync(dialect.config('path') + 'fr.js').toString())[original], translation]);
+          test(assert.equal, [JSON.parse(fs.readFileSync(
+            dialect.config('path') + 'it.js').toString())[original].translation,
+            original
+          ]);
+          test(assert.equal, [JSON.parse(fs.readFileSync(
+            dialect.config('path') + 'fr.js').toString())[original].translation,
+            translation
+          ]);
           exit();
         });
 
@@ -258,13 +272,14 @@ var fs = require('fs'),
   require('./..').store({store: 'mongodb', database: 'test_4'}, function (error, store) {
     store.collection.remove({}, function (err, data) {
 
-      var options = {count: 1, context: 'females', what: 'good'},
+      var options = {count: 1, context: 'females', name: 'Anna'},
       original = [
-        'You have {count} {what} friend',
-        'You have {count} {what} friends',
+        'You have {count} friend called {name}',
+        'You have {count} friends called {name}',
         options
       ],
-      translation = 'Tienes 1 buena amiga'; // If this works, I'm a genius
+      translation = 'Tienes {count} amiga llamada {name}',
+      parsed_translation = 'Tienes 1 amiga llamada Anna'; // If this works, I'm a genius
 
       dialect.config('store', store);
 
@@ -324,38 +339,46 @@ var fs = require('fs'),
             }
           }());
 
-          // Memory (Missing translations always get same str)
-          test(assert.equal, [dialect.getTranslation(original), original]);
+          // Memory (Missing translations get same str but parsed)
+          test(assert.equal, [dialect.getTranslation(original), 'You have 1 friend called Anna']);
         });
 
         fk.parallel(function () {
-          exit();
-        /*
 
           // WHEN a translator introduces a translation to a target locale
           // =============================================================
-          translation = 'Me encanta el gazpacho';
-          locale = 'es';
 
-          dialect.setTranslation({original: original, locale: locale}, translation, function () {
+          dialect.setTranslation({
+            original: original[0],
+            locale: dialect.config('current_locale'),
+            context: 'female',
+            count: 'singular'
+          }, translation, function () {
+
             // THEN it should save it to the Store, JSON and Memory for each locale
             // ====================================================================
-            dialect.config('store').get({original: original, locale: locale}, function (err, data) {
+            dialect.config('store').get(
+              {original: original[0], locale: dialect.config('current_locale')}, function (err, data) {
+              var locale = dialect.config('current_locale');
 
               // DB
               test(assert.equal, [data[0].locale, locale]);
-              test(assert.equal, [data[0].original, original]);
+              test(assert.equal, [data[0].original, original[0]]);
               test(assert.equal, [data[0].translation, translation]);
 
               // JSON available on this local machine, but on other they need to sync
-              test(assert.equal, [JSON.parse(fs.readFileSync(dialect.config('path') + locale + '.js').toString())[original], translation]);
+              test(assert.equal, [
+                JSON.parse(fs.readFileSync(dialect.config('path') + locale + '.js').toString())[original[0]].translation,
+                'Tienes {count} amiga llamada {name}'
+              ]);
 
               // Memory available on this local machine
-              test(assert.equal, [dialect.getTranslation(original), translation]);
+              test(assert.equal, [dialect.getTranslation(original), parsed_translation]);
+
+              exit(); // OMG, I'm a genius!
 
             });
           });
-          */
         });
 
       });

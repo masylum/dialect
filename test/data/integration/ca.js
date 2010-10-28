@@ -1,1 +1,0 @@
-{"E muito bom": "Esta molt be"}
