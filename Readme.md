@@ -31,57 +31,69 @@ This module is currently *under construction*
       storage: {mongodb: {database: 'dev'}},
     });
 
-    // change our locale to es
+    // change our locale to Spanish
     dialect.config('locale', 'es');
 
-### Translate
+    dialect.translate('Hello World!');
 
-    console.log(dialect.translate('Hello World!')); // MongoDB (it caches to a JSON file)
-    // => 'Hola Mundo'
+## How does it work?
 
-    console.log(dialect.translate('Hello World!')); // Memory cached
-    // => 'Hola Mundo'
+Dialect stores automatically all the strings pending to be translated.
+Once your translate the strings, they will be cached on a JSON file
+for every machine that needs the translations. The JSON will be loaded
+to memory, so you will acces the translations from memory.
 
-    delete require('./dictionaries')['es']['Hello World!');
-    console.log(dialect.translate('Hello World!')); // JSON dictionary cached
-    // => 'Hola Mundo'
+Dialect supports counts and contexts.
 
+### Usings counts
 
-### Count
+A _counts_ are params that allow you to output a string using
+singular or plural.
+You need to provide an array with the singular, plural and
+the number.
 
-    [1, 2, 3].forEach(function (count) {
-      console.log(dialect.translate([
+    [1, 2, 3].forEach(function (i) {
+      dialect.translate([
         'Hello World',
         'Hello Worlds',
-        count
-      ]));
+        {count: i}
+      ]);
     });
+
     // => 'Hola Mundo'
     // => 'Hola Mundos'
     // => 'Hola Mundos'
 
 
-### Context
+### Using contexts
+
+A _context_ is a param that allows you to give a special meaning
+about a sentence. It helps the translator and it may generate
+diferent translations depending on the context.
 
     ['female', 'male'].forEach(function (gender) {
-      console.log(dialect.translate([
+      dialect.translate([
         'My friends',
         gender
-      ]));
+      ]);
     });
     // => 'Mis amigas'
     // => 'Mis amigos'
 
 
-### Count + Context + String interpolation
+### String interpolation
+
+You can put any param you want on the translation strings surrounded
+by moustaches {}. Remember that _count_ and _context_ have special
+meanings although they can be used with interpolations.
 
     [1, 2].forEach(function (count) {
       ['female', 'male'].forEach(function (gender) {
-        console.log(dialect.translate([
-          'You have {count} {what} friend',
-          'You have {count} {what} friends',
-          {count: count, context: context, what: 'good'}
-        ]));
+        dialect.translate([
+          'You have {count} friend called {name}',
+          'You have {count} friends called {name}',
+          {count: count, context: context, name: 'Anna'}
+        ]);
       });
     });
     // => 'Tengo 1 buena amiga'
