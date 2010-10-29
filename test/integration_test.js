@@ -1,5 +1,3 @@
-GLOBAL.inspect = require('eyes').inspector({ styles: { all:     'yellow', label:   'underline', other:   'inverted', key:     'bold', special: 'grey', string:  'green', number:  'red', bool:    'blue', regexp:  'green' }, maxLength: 9999999999 });
-
 var fs = require('fs'),
     assert = require('assert'),
     funk = require('./../support/funk/lib/funk'),
@@ -14,15 +12,15 @@ var fs = require('fs'),
         funktion.apply(this, args);
       } catch (exc) {
         passed_tests -= 1;
-        inspect(exc);
+        console.log(exc);
       }
     },
 
     exit = function () {
       exits += 1;
       if (exits === 4) {
-        inspect('Tests finshed!');
-        inspect(passed_tests + '/' + num_tests);
+        console.log('Tests finshed!');
+        console.log(passed_tests + '/' + num_tests);
         process.exit(0);
       }
     };

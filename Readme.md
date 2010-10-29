@@ -108,13 +108,11 @@ meanings although they can be used with interpolations.
 
 Dialect is heavily tested using a mix of Vows and node asserts module.
 
-    npm install eyes
-
     make test
 
 ## Benchmarks
 
-Dialect should not add an overhead to your application on gettinc translations.
+Dialect should not add an overhead to your application on getting translations.
 Please run/add benchmarks to ensure that this module performance rocks.
 
     node benchmakrs/app.js
