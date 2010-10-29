@@ -8,11 +8,14 @@
      `Wbmd"MML..JMML.`Moo9^Yo..JMML.`Mbmmd'  YMbmd'   `Mbmo
 
 
-Dialect is a painless nodejs library to deal with i18n, and L10n.
+Dialect is a painless nodejs module that deals with i18n, and L10n.
 
-This module is currently *under construction*
+This module is _under construction_.
 
 ## Install
+
+Currently dialect just supports MongoDB, so, you need to install it or fork
+your own storage solution .
 
     npm install dialect
 
@@ -108,3 +111,12 @@ Dialect is heavily tested using a mix of Vows and node asserts module.
     npm install eyes
 
     make test
+
+## Benchmarks
+
+Dialect should not add an overhead to your application on gettinc translations.
+Please run/add benchmarks to ensure that this module performance rocks.
+
+    node benchmakrs/app.js
+
+Have fun!
