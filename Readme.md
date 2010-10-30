@@ -37,7 +37,7 @@ your own storage solution .
     // change our locale to Spanish
     dialect.config('locale', 'es');
 
-    dialect.translate('Hello World!');
+    dialect.getTranslation('Hello World!');
 
 ## How does it work?
 
@@ -56,7 +56,7 @@ You need to provide an array with the singular, plural and
 the number.
 
     [1, 2, 3].forEach(function (i) {
-      dialect.translate([
+      dialect.getTranslation([
         'Hello World',
         'Hello Worlds',
         {count: i}
@@ -75,7 +75,7 @@ about a sentence. It helps the translator and it may generate
 diferent translations depending on the context.
 
     ['female', 'male'].forEach(function (gender) {
-      dialect.translate([
+      dialect.getTranslation([
         'My friends',
         gender
       ]);
@@ -92,7 +92,7 @@ meanings although they can be used with interpolations.
 
     [1, 2].forEach(function (count) {
       ['female', 'male'].forEach(function (gender) {
-        dialect.translate([
+        dialect.getTranslation([
           'You have {count} friend called {name}',
           'You have {count} friends called {name}',
           {count: count, context: context, name: 'Anna'}
@@ -104,6 +104,17 @@ meanings although they can be used with interpolations.
     // => 'Tengo 2 buenas amigas'
     // => 'Tengo 2 buenos amigos'
 
+## Store translations
+
+To store a new translation, use the method setTranslation.
+
+    dialect.setTranslation(
+      {original: 'I love gazpacho', locale: 'es'},
+      'Me encanta el gazpacho',
+      function () {
+        // :)
+      }
+    );
 ## Test
 
 Dialect is heavily tested using a mix of Vows and node asserts module.
