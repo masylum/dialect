@@ -104,7 +104,7 @@ meanings although they can be used with interpolations.
     // => 'Tengo 2 buenas amigas'
     // => 'Tengo 2 buenos amigos'
 
-## Store translations
+### Store translations
 
 To store a new translation, use the method setTranslation.
 
@@ -115,6 +115,7 @@ To store a new translation, use the method setTranslation.
         // :)
       }
     );
+
 ## Test
 
 Dialect is heavily tested using a mix of Vows and node asserts module.
