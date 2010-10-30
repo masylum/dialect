@@ -1,0 +1,1 @@
+{"You have {count} friend called {name}":{"translation":"Tienes {count} amiga llamada {name}"},"You have {count} friends called {name}":{"translation":null,"count":"plural","context":null}}
