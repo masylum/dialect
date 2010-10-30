@@ -99,10 +99,10 @@ meanings although they can be used with interpolations.
         ]);
       });
     });
-    // => 'Tengo 1 buena amiga'
-    // => 'Tengo 1 buen amigo'
-    // => 'Tengo 2 buenas amigas'
-    // => 'Tengo 2 buenos amigos'
+    // => 'Tienes 1 amiga que se llama Anna'
+    // => 'Tienes 1 amigo que se llama Anna'
+    // => 'Tienes 2 amigas que se llaman Anna'
+    // => 'Tienes 2 amigos que se llaman Anna'
 
 ### Store translations
 
