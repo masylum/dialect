@@ -31,13 +31,21 @@ your own storage solution .
     var dialect = require('dialect').dialect({
       path:'./dictionaries',
       base_locale: 'en',
-      storage: {mongodb: {database: 'dev'}},
     });
 
     // change our locale to Spanish
     dialect.config('locale', 'es');
 
-    dialect.getTranslation('Hello World!');
+    // Configs and open the storage connection
+    require('dialect').store(
+      {store: 'mongodb', database: 'translations'},
+      function (error, store) {
+
+        dialect.config('store', store);
+
+        dialect.getTranslation('Hello World!');
+      }
+    );
 
 ## How does it work?
 
