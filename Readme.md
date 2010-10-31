@@ -40,9 +40,7 @@ your own storage solution .
     require('dialect').store(
       {store: 'mongodb', database: 'translations'},
       function (error, store) {
-
         dialect.config('store', store);
-
         dialect.getTranslation('Hello World!');
       }
     );
