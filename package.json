@@ -1,7 +1,7 @@
 {
   "name": "dialect",
   "description": "I18n and L10n for nodejs",
-  "version": "0.0.3",
+  "version": "0.0.4",
   "author": "Pau Ramon <masylum@gmail.com>",
   "keywords": ["i18n", "l10n"],
   "dependencies": { "mongodb": ">=0.7.9", "funk": "0.0.1", "vows": "0.5.2", "eyes": "0.1.6", "lingo": ">=0.0.3"},
