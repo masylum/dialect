@@ -54,11 +54,11 @@ var fs = require('fs'),
       // =====================================
       assert.notEqual(store, null);
 
-      store.length('es', function (error, length) {
+      store.count({locale: 'es'}, function (error, length) {
         test(assert.equal, [length, 0]);
       });
 
-      store.length('en', function (error, length) {
+      store.count({locale: 'en'}, function (error, length) {
         test(assert.equal, [length, 0]);
       });
 
