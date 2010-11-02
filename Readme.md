@@ -10,7 +10,7 @@
 
 Dialect is a painless nodejs module that deals with i18n, and L10n.
 
-This module is _under construction_.
+This module may contain traces of bugs.
 
 ## Install
 
@@ -121,6 +121,13 @@ To store a new translation, use the method setTranslation.
         // :)
       }
     );
+
+## express-dialect
+
+Do you have an express application and you to deal with i18n? Do you want to see
+how dialect works in a real app?
+
+Try [express-dialect](http://www.github.com/masylum/express-dialect)
 
 ## Test
 
