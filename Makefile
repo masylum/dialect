@@ -1,7 +1,6 @@
 NODE = node
 
-test: test_integration
-	vows test/dialect_test.js --spec
+test: test_dialect
 
-test_integration:
-	@$(NODE) test/integration_test.js
+test_dialect:
+	@$(NODE) test/dialect.js
