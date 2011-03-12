@@ -80,7 +80,7 @@ diferent translations depending on the context.
 ### String interpolation
 
 You can put any param you want on the translation strings surrounded
-by moustaches `{``}`. Remember that `count` and `context` have a special
+by moustaches `{}`. Remember that `count` and `context` have a special
 meaning although they can also be used with interpolations.
 
     [1, 2].forEach(function (count) {
