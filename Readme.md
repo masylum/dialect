@@ -23,59 +23,65 @@ Dialect is the painless nodejs module that deals with i18n.
 
 ## Example
 
-    var dialect = require('dialect'),
-        d = dialect.dialect({current_locale: 'es', store: 'mongodb'}, function (err, store) {
-          d.get('Hello World!'); // => Hola mundo
-        }).reCache();
+    var dialect = require('dialect').dialect({current_locale: 'es', store: 'mongodb'});
+
+    d.sync('all', 3600, function (err, foo) {
+      d.get('Hello World!'); // => Hola mundo
+    });
 
 ## API
 
-* `config`:
-* `get`:
-* `set`:
-* `reCache`:
+* `config (key, value)`: Exposes configuration values.
+* `get (query)`: Gets a translation cached in memory.
+* `set (query, translation, callback)`: Sets a translation on the store.
+* `sync (locale, repeat, callback)`: Syncs the store with the memory cache.
 
-### Usings counts
+### Plurals
 
-A _counts_ are params that allow you to output a string using
-singular or plural.
-You need to provide an array with the singular, plural and
-the number.
+Provide an array with the singular and plural forms of the string,
+the last element must contain a `count` param that will determine
+which plural form to use.
+
+    dialect.config('current_locale': 'sl'); // slovenian
 
     [1, 2, 3].forEach(function (i) {
-      dialect.get([
-        'Hello World',
-        'Hello Worlds',
-        {count: i}
-      ]);
+      dialect.get(['Beer', 'Beers', {count: i}]);
     });
 
-    // => 'Hola Mundo'
-    // => 'Hola Mundos'
-    // => 'Hola Mundos'
+    +---------------+-------------+
+    | found         | not found   |
+    +---------------+-------------+
+    | Pivo          | Beer        |
+    | Pivi          | Beers       |
+    | Piva          | Beers       |
+    +---------------+-------------+
 
 
-### Using contexts
+### Contexts
 
-A _context_ is a param that allows you to give a special meaning
-about a sentence. It helps the translator and it may generate
+A `context` is a param that allows you to give a special meaning
+on a string. It helps the translator and it may generate
 diferent translations depending on the context.
 
+    dialect.config('current_locale': 'es'); // spanish
+
     ['female', 'male'].forEach(function (gender) {
-      dialect.get([
-        'My friends',
-        gender
-      ]);
+      dialect.get(['My friends', gender]);
     });
-    // => 'Mis amigas'
-    // => 'Mis amigos'
+
+    +---------------+-------------+
+    | found         | not found   |
+    +---------------+-------------+
+    | Mis amigos    | My friends  |
+    | Mis amigas    | My friends  |
+    +---------------+-------------+
 
 
 ### String interpolation
 
 You can put any param you want on the translation strings surrounded
-by moustaches {}. Remember that _count_ and _context_ have special
-meanings although they can be used with interpolations.
+by moustaches `{``}`. Remember that `count` and `context` have a special
+meaning although they can also be used with interpolations.
 
     [1, 2].forEach(function (count) {
       ['female', 'male'].forEach(function (gender) {
@@ -86,10 +92,15 @@ meanings although they can be used with interpolations.
         ]);
       });
     });
-    // => 'Tienes 1 amiga que se llama Anna'
-    // => 'Tienes 1 amigo que se llama Anna'
-    // => 'Tienes 2 amigas que se llaman Anna'
-    // => 'Tienes 2 amigos que se llaman Anna'
+
+    +---------------------------------------+-----------------------------------------+
+    | found                                 | not found                               |
+    +---------------------------------------+-----------------------------------------+
+    | Tienes 1 amiga que se llama Anna      | You have 1 friend called Anna           |
+    | Tienes 1 amigo que se llama Anna      | You have 1 friend called Anna           |
+    | Tienes 2 amigas que se llaman Anna    | You have 2 friends called Anna          |
+    | Tienes 2 amigos que se llaman Anna    | You have 2 friends called Anna          |
+    +---------------------------------------+-----------------------------------------+
 
 ### Store translations
 
@@ -97,10 +108,7 @@ To store a new translation, use the method `set`.
 
     dialect.set(
       {original: 'I love gazpacho', locale: 'es'},
-      'Me encanta el gazpacho',
-      function () {
-        // :)
-      }
+      'Me encanta el gazpacho'
     );
 
 ## express-dialect
