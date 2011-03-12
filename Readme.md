@@ -8,14 +8,9 @@
      `Wbmd"MML..JMML.`Moo9^Yo..JMML.`Mbmmd'  YMbmd'   `Mbmo
 
 
-Dialect is a painless nodejs module that deals with i18n, and L10n.
-
-This module may contain traces of bugs.
+Dialect is the painless nodejs module that deals with i18n.
 
 ## Install
-
-Currently dialect just supports MongoDB, so, you need to install it or fork
-your own storage solution .
 
     npm install dialect
 
@@ -28,31 +23,17 @@ your own storage solution .
 
 ## Example
 
-    var dialect = require('dialect').dialect({
-      path:'./dictionaries',
-      base_locale: 'en',
-    });
+    var dialect = require('dialect'),
+        d = dialect.dialect({current_locale: 'es', store: 'mongodb'}, function (err, store) {
+          d.get('Hello World!'); // => Hola mundo
+        }).reCache();
 
-    // change our locale to Spanish
-    dialect.config('locale', 'es');
+## API
 
-    // Configs and open the storage connection
-    require('dialect').store(
-      {store: 'mongodb', database: 'translations'},
-      function (error, store) {
-        dialect.config('store', store);
-        dialect.getTranslation('Hello World!');
-      }
-    );
-
-## How does it work?
-
-Dialect stores automatically all the strings pending to be translated.
-Once your translate the strings, they will be cached on a JSON file
-for every machine that needs the translations. The JSON will be loaded
-to memory, so you will acces the translations from memory.
-
-Dialect supports counts and contexts.
+* `config`:
+* `get`:
+* `set`:
+* `reCache`:
 
 ### Usings counts
 
@@ -62,7 +43,7 @@ You need to provide an array with the singular, plural and
 the number.
 
     [1, 2, 3].forEach(function (i) {
-      dialect.getTranslation([
+      dialect.get([
         'Hello World',
         'Hello Worlds',
         {count: i}
@@ -81,7 +62,7 @@ about a sentence. It helps the translator and it may generate
 diferent translations depending on the context.
 
     ['female', 'male'].forEach(function (gender) {
-      dialect.getTranslation([
+      dialect.get([
         'My friends',
         gender
       ]);
@@ -98,7 +79,7 @@ meanings although they can be used with interpolations.
 
     [1, 2].forEach(function (count) {
       ['female', 'male'].forEach(function (gender) {
-        dialect.getTranslation([
+        dialect.get([
           'You have {count} friend called {name}',
           'You have {count} friends called {name}',
           {count: count, context: context, name: 'Anna'}
@@ -112,9 +93,9 @@ meanings although they can be used with interpolations.
 
 ### Store translations
 
-To store a new translation, use the method setTranslation.
+To store a new translation, use the method `set`.
 
-    dialect.setTranslation(
+    dialect.set(
       {original: 'I love gazpacho', locale: 'es'},
       'Me encanta el gazpacho',
       function () {
@@ -131,9 +112,9 @@ Try [express-dialect](http://www.github.com/masylum/express-dialect)
 
 ## Test
 
-Dialect is heavily tested using a mix of Vows and node asserts module.
+Dialect is heavily tested using [testosterone](http://www.github.com/masylum/testosterone)
 
-    make test
+    make
 
 ## Benchmarks
 

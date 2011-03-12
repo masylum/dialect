@@ -1,4 +1,0 @@
-{
-  "Chega": "Basta",
-  "de": "de"
-}

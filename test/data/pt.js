@@ -1,1 +1,0 @@
-{"Chega":"Chega","de":"de","Os desafinados tamb\u00e9m t\u00eam um cora\u00e7\u00e3o":"Os desafinados tamb\u00e9m t\u00eam um cora\u00e7\u00e3o"}

@@ -1,7 +1,6 @@
 var testosterone = require('testosterone')({title: 'Dialect core'}),
     assert = testosterone.assert,
     gently = global.GENTLY = new (require('gently')),
-    fs = require('fs'),
     dialect = require('./..').dialect,
 
     _stubIO = function () {
@@ -156,7 +155,7 @@ testosterone
 
     gently.expect(store, 'set', function (q, u, cb) {
       assert.deepEqual(q, query);
-      assert.deepEqual(u, translation);
+      assert.deepEqual(u, {translation: translation});
       assert.deepEqual(cb, callback);
       cb('foo', 'bar');
     });
@@ -253,8 +252,6 @@ testosterone
           gently.expect(store, 'add', function (q, u, cb) {
             assert.deepEqual(q, {original: original, locale: 'es'});
             assert.deepEqual(u, undefined);
-            assert.ok(cb);
-            cb();
           });
         };
 

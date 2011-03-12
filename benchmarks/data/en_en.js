@@ -1,1 +1,0 @@
-{"You have {count} friend called {name}":{"translation":null,"count":"singular","context":null},"You have {count} friends called {name}":{"translation":null,"count":"plural","context":null}}

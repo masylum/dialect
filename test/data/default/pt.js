@@ -1,4 +1,0 @@
-{
-  "Chega": "Chega",
-  "de": "de"
-}
