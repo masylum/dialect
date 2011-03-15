@@ -10,6 +10,12 @@ var testosterone = require('testosterone')({title: 'Dialect core'}),
         return io;
       });
       return io;
+    },
+
+    _stubConnect = function (dialect) {
+      gently.expect(dialect.store, 'connect', function (cb) {
+        cb();
+      });
     };
 
 testosterone
@@ -29,7 +35,7 @@ testosterone
 
   .add('  WHEN no `base_locale` or `current_locale` given \n' +
        '  THEN it should use `en` as default', function (spec) {
-    var options = {store: {}},
+    var options = {store: {mongodb: {}}},
         d = dialect(options);
 
     spec(function () {
@@ -40,7 +46,7 @@ testosterone
 
   .add('  WHEN no `locales` given \n' +
        '  THEN it should use `[en]` as default', function (spec) {
-    var options = {store: {}},
+    var options = {store: {mongodb: {}}},
         d = dialect(options);
 
     spec(function () {
@@ -55,7 +61,7 @@ testosterone
   .add(' GIVEN a call to config \n' +
        '  WHEN just param `key` is given \n' +
        '  THEN it should return `_option[key]`', function (spec) {
-    var options = {store: {}, base_locale: 'en'},
+    var options = {store: {mongodb: {}}, base_locale: 'en'},
         d = dialect(options);
 
     spec(function () {
@@ -65,17 +71,17 @@ testosterone
 
   .add('  WHEN no params given \n' +
        '  THEN it should return the whole `_option`', function (spec) {
-    var options = {store: {}, base_locale: 'en'},
+    var options = {store: {mongodb: {}}, base_locale: 'en'},
         d = dialect(options);
 
     spec(function () {
-      assert.deepEqual(d.config(), {store: {}, base_locale: 'en', current_locale: 'en', locales: ['en']});
+      assert.deepEqual(d.config(), {store: {mongodb: {}}, base_locale: 'en', current_locale: 'en', locales: ['en']});
     })();
   })
 
   .add('  WHEN `key` and `value` params given \n' +
        '  THEN it should set the `_option[key]` to `value`', function (spec) {
-    var options = {store: {}, base_locale: 'en'},
+    var options = {store: {mongodb: {}}, base_locale: 'en'},
         d = dialect(options);
 
     d.config('base_locale', 'es');
@@ -86,14 +92,14 @@ testosterone
   })
 
   ////////////////////////////////////////////
-  // reCache
+  // sync
   ////////////////////////////////////////////
 
-  .add('GIVEN a call to `reCache` \n' +
+  .add('GIVEN a call to `sync` \n' +
        '  WHEN asking for a `locale` \n' +
        '  THEN should call `cacheDicionary` of `IO`', function (spec) {
 
-    var store = {},
+    var store = {mongodb: {}},
         options = {locales: ['en', 'es'], store: store},
         io = _stubIO(),
         d = dialect(options),
@@ -101,11 +107,60 @@ testosterone
 
     spec();
 
+    _stubConnect(d);
     gently.expect(io, 'cacheDictionary', function (locale, cb) {
       assert.equal(locale, 'en');
       assert.ok(cb);
     });
-    d.reCache('en', cb);
+
+    d.sync({locale: 'en'}, cb);
+  })
+
+  .add('  WHEN not asking for a `locale` \n' +
+       '  THEN should call `cacheDicionary` for each locale', function (spec) {
+
+    var store = {mongodb: {}},
+        options = {locales: ['en', 'es'], store: store},
+        io = _stubIO(),
+        d = dialect(options),
+        cb = function () { };
+
+    spec();
+
+    _stubConnect(d);
+    options.locales.forEach(function (l) {
+      gently.expect(io, 'cacheDictionary', function (locale, cb) {
+        assert.equal(locale, l);
+        assert.ok(cb);
+      });
+    });
+    d.sync({}, cb);
+  })
+
+  .add('  WHEN passing a `interval` \n' +
+       '  THEN should call `cacheDicionary` every `interval` seconds', function (spec) {
+
+    var store = {mongodb: {}},
+        options = {locales: ['en', 'es'], store: store},
+        io = _stubIO(),
+        d = dialect(options),
+        cb = function () { };
+
+    spec();
+
+    _stubConnect(d);
+    gently.expect(io, 'cacheDictionary', function (locale, cb) {
+      assert.equal(locale, 'es');
+      assert.ok(cb);
+      cb();
+    });
+
+    gently.expect(require('timers'), 'setInterval', function (fn, delay) {
+      assert.ok(fn);
+      assert.equal(delay, 3000);
+    });
+
+    d.sync({locale: 'es', interval: 3000}, cb);
   })
 
   ////////////////////////////////////////////
@@ -116,7 +171,7 @@ testosterone
        '  WHEN `query.original` or `query.locale` or `translation` is missing \n' +
        '  THEN an error should be thrown', function (spec) {
 
-    var options = {locales: ['en', 'es'], store: {}},
+    var options = {locales: ['en', 'es'], store: {mongodb: {}}},
         d = dialect(options);
 
     spec();
@@ -141,7 +196,7 @@ testosterone
   .add('  WHEN `query.original` and `query.locale` and `translation` are valid \n' +
        '  THEN should set the translation to the `store`', function (spec) {
 
-    var store = {},
+    var store = {mongodb: {}},
         query = {original: 'hello', locale: 'foo'},
         translation = 'foola',
         options = {locales: ['en', 'es'], store: store},
@@ -153,7 +208,8 @@ testosterone
 
     spec();
 
-    gently.expect(store, 'set', function (q, u, cb) {
+    _stubConnect(d);
+    gently.expect(d.store, 'set', function (q, u, cb) {
       assert.deepEqual(q, query);
       assert.deepEqual(u, {translation: translation});
       assert.deepEqual(cb, callback);
@@ -171,7 +227,7 @@ testosterone
        '  WHEN `original` is not provided or invalid (String|Array)  \n' +
        '  THEN an error should be thrown', function (spec) {
 
-    var options = {locales: ['en', 'es'], store: {}},
+    var options = {locales: ['en', 'es'], store: {mongodb: {}}},
         d = dialect(options);
 
     spec();
@@ -190,7 +246,7 @@ testosterone
   .add('  WHEN `original` is valid and cached on memory \n' +
        '  THEN should return the parsed translation from memory', function (spec) {
 
-    var options = {locales: ['en', 'es', 'sl'], store: {}, current_locale: 'es'},
+    var options = {locales: ['en', 'es', 'sl'], store: {mongodb: {}}, current_locale: 'es'},
         d = dialect(options);
 
     d.dicionaries = {};
@@ -245,11 +301,11 @@ testosterone
        '  THEN should try to store the new word on the `store` \n' +
        '  AND should return original in singular or plural form', function (spec) {
 
-    var store = {},
+    var store = {mongodb: {}},
         options = {locales: ['en', 'es'], current_locale: 'es', store: store},
         d = dialect(options),
         stub_add = function (original) {
-          gently.expect(store, 'add', function (q, u, cb) {
+          gently.expect(d.store, 'add', function (q, u, cb) {
             assert.deepEqual(q, {original: original, locale: 'es'});
             assert.deepEqual(u, undefined);
           });
@@ -259,17 +315,22 @@ testosterone
 
     spec();
 
+    _stubConnect(d);
     // no params
     stub_add('One cat');
     assert.equal(d.get('One cat'), 'One cat');
 
+    _stubConnect(d);
     // singular
     stub_add('cat');
     assert.equal(d.get(['cat', 'cats', {count: 1}]), 'cat');
 
+    _stubConnect(d);
     // plural
     stub_add('cat');
     assert.equal(d.get(['cat', 'cats', {count: 2}]), 'cats');
+
+    _stubConnect(d);
     stub_add('cat');
     assert.equal(d.get(['cat', 'cats', {count: 3}]), 'cats');
   })

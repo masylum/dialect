@@ -1,5 +1,6 @@
 var testosterone = require('testosterone')({title: 'Mongodb store'}),
     assert = testosterone.assert,
+    STORE = require('../../lib/stores/mongodb'),
     gently = global.GENTLY = new (require('gently'));
 
 testosterone
@@ -15,7 +16,7 @@ testosterone
 
     spec(function () {
       var db = {},
-          store = require('../../lib/store').mongodb();
+          store = STORE();
 
       // error
       gently.expect(store.db, 'open', function (cb) {
@@ -56,7 +57,7 @@ testosterone
        '  AND return the translation according to `query`', function (spec) {
 
     spec(function () {
-      var store = require('../../lib/store').mongodb();
+      var store = STORE();
 
       store.collection = {};
 
@@ -102,7 +103,7 @@ testosterone
        '  AND add the `translation` if is not on the store', function (spec) {
 
     spec(function () {
-      var store = require('../../lib/store').mongodb(),
+      var store = STORE(),
           original = {original: 'hello'},
           new_doc = {original: 'hello', translation: 'hola'};
 
@@ -162,7 +163,7 @@ testosterone
        '  AND update the translations according to `query` and `update`', function (spec) {
 
     spec(function () {
-      var store = require('../../lib/store').mongodb(),
+      var store = STORE(),
           original = {original: 'hello'},
           translation = {translation: 'hola'},
           new_doc = {original: 'hello', translation: 'hola'};
@@ -194,7 +195,7 @@ testosterone
        '  AND remove the translation according to `query`', function (spec) {
 
     spec(function () {
-      var store = require('../../lib/store').mongodb(),
+      var store = STORE(),
           original = {original: 'hello'};
 
       store.collection = {};
@@ -223,7 +224,7 @@ testosterone
        '  AND count the translations according to `query`', function (spec) {
 
     spec(function () {
-      var store = require('../../lib/store').mongodb(),
+      var store = STORE(),
           original = {original: 'hello'};
 
       store.collection = {};

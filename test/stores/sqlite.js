@@ -1,5 +1,6 @@
 var testosterone = require('testosterone')({title: 'SQLite store'}),
     assert = testosterone.assert,
+    SQLITE = require('../../lib/stores/sqlite'),
     gently = global.GENTLY = new (require('gently'));
 
 testosterone
@@ -15,7 +16,7 @@ testosterone
 
     spec(function () {
       var db = {},
-          store = require('../../lib/store').sqlite({table: 'test'});
+          store = SQLITE({table: 'test'});
 
       // error
       gently.expect(store.db, 'open', function (database, cb) {
@@ -63,7 +64,7 @@ testosterone
        '  AND return the translation according to `query`', function (spec) {
 
     spec(function () {
-      var store = require('../../lib/store').sqlite();
+      var store = SQLITE();
 
       store.collection = {};
 
@@ -104,7 +105,7 @@ testosterone
        '  AND add the `translation` if is not on the store', function (spec) {
 
     spec(function () {
-      var store = require('../../lib/store').sqlite(),
+      var store = SQLITE(),
           original = {original: 'hello'},
           new_doc = {original: 'hello', translation: 'hola'};
 
@@ -164,7 +165,7 @@ testosterone
        '  AND update the translations according to `query` and `update`', function (spec) {
 
     spec(function () {
-      var store = require('../../lib/store').sqlite();
+      var store = SQLITE();
 
       store.collection = {};
 
@@ -192,7 +193,7 @@ testosterone
        '  AND remove the translation according to `query`', function (spec) {
 
     spec(function () {
-      var store = require('../../lib/store').sqlite(),
+      var store = SQLITE(),
           original = {original: 'hello'};
 
       store.collection = {};
@@ -221,7 +222,7 @@ testosterone
        '  AND count the translations according to `query`', function (spec) {
 
     spec(function () {
-      var store = require('../../lib/store').sqlite(),
+      var store = SQLITE(),
           original = {original: 'hello'};
 
       store.collection = {};

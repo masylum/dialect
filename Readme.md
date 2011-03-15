@@ -25,7 +25,7 @@ Dialect is the painless nodejs module that deals with i18n.
 
     var dialect = require('dialect').dialect({current_locale: 'es', store: 'mongodb'});
 
-    d.sync('all', 3600, function (err, foo) {
+    dialect.sync({interval:3600}, function (err, foo) {
       d.get('Hello World!'); // => Hola mundo
     });
 
