@@ -8,7 +8,7 @@
      `Wbmd"MML..JMML.`Moo9^Yo..JMML.`Mbmmd'  YMbmd'   `Mbmo
 
 
-Dialect is the painless nodejs module that deals with i18n.
+Dialect is a painless nodejs module to manage your translations.
 
 ## Install
 
@@ -17,7 +17,7 @@ Dialect is the painless nodejs module that deals with i18n.
 ## Philosphy
 
 * Scalable: The translations should be available to any number of machines.
-* Fast: Getting translations from memory if possible.
+* Fast:     Getting translations from memory.
 * Reliable: Translations should be always available on a central repository/database.
 * Flexible: You should be able to use your favorite storage solution.
 
@@ -25,9 +25,29 @@ Dialect is the painless nodejs module that deals with i18n.
 
     var dialect = require('dialect').dialect({current_locale: 'es', store: 'mongodb'});
 
-    dialect.sync({interval:3600}, function (err, foo) {
-      d.get('Hello World!'); // => Hola mundo
+    // connects to the store
+    dialect.connect(function () {
+
+      // syncs the memory dictionaries with the store
+      dialect.sync({interval:3600}, function (err, foo) {
+        d.get('Hello World!'); // => Hola mundo
+      });
     });
+
+## Options
+
+* `current_locale`: Current locale used on your application.
+* `base_locale`: Base locale. Serves as keys on the dictionaries.
+* `locales`: Which locales are available on your application.
+* `store`: Object containing the store and their options
+  * `mongodb`: mongoDB storage.
+    * database
+    * host
+    * port
+    * collection
+  * `sqlite`: SQLite storage.
+    * database
+    * table
 
 ## API
 
@@ -35,6 +55,7 @@ Dialect is the painless nodejs module that deals with i18n.
 * `get (query)`: Gets a translation cached in memory.
 * `set (query, translation, callback)`: Sets a translation on the store.
 * `sync (locale, repeat, callback)`: Syncs the store with the memory cache.
+* `connect (callback)`: Connects to the database store.
 
 ### Plurals
 
@@ -56,6 +77,8 @@ which plural form to use.
     | Piva          | Beers       |
     +---------------+-------------+
 
+You have an examle using plural forms in `examples/plurals.js`
+
 
 ### Contexts
 
@@ -76,6 +99,7 @@ diferent translations depending on the context.
     | Mis amigas    | My friends  |
     +---------------+-------------+
 
+You have an examle using contexts in `examples/contexts.js`
 
 ### String interpolation
 
@@ -102,6 +126,8 @@ meaning although they can also be used with interpolations.
     | Tienes 2 amigos que se llaman Anna    | You have 2 friends called Anna          |
     +---------------------------------------+-----------------------------------------+
 
+You have an examle using contexts in `examples/interpolation.js`
+
 ### Store translations
 
 To store a new translation, use the method `set`.
@@ -111,12 +137,11 @@ To store a new translation, use the method `set`.
       'Me encanta el gazpacho'
     );
 
-## express-dialect
+## dialect-http
 
-Do you have an express application and you to deal with i18n? Do you want to see
-how dialect works in a real app?
+Do you need a nice environment for your translators?
 
-Try [express-dialect](http://www.github.com/masylum/express-dialect)
+Dialect http is an amazing web application to manage your translations.
 
 ## Test
 
@@ -129,6 +154,18 @@ Dialect is heavily tested using [testosterone](http://www.github.com/masylum/tes
 Dialect should not add an overhead to your application on getting translations.
 Please run/add benchmarks to ensure that this module performance rocks.
 
-    node benchmakrs/app.js
+    node benchmakrs/hello_world.js
 
-Have fun!
+
+## License
+
+(The MIT License)
+
+Copyright (c) 2010-2011 Pau Ramon <masylum@gmail.com>
+
+Permission is hereby granted, free of charge, to any person obtaining a copy of this software and associated documentation files (the 'Software'), to deal in the Software without restriction, including without limitation the rights to use, copy, modify, merge, publish, distribute, sublicense, and/or sell copies of the Software, and to permit persons to whom the Software is furnished to do so, subject to the following conditions:
+
+The above copyright notice and this permission notice shall be included in all copies or substantial portions of the Software.
+
+THE SOFTWARE IS PROVIDED 'AS IS', WITHOUT WARRANTY OF ANY KIND, EXPRESS OR IMPLIED, INCLUDING BUT NOT LIMITED TO THE WARRANTIES OF MERCHANTABILITY, FITNESS FOR A PARTICULAR PURPOSE AND NONINFRINGEMENT. IN NO EVENT SHALL THE AUTHORS OR COPYRIGHT HOLDERS BE LIABLE FOR ANY CLAIM, DAMAGES OR OTHER LIABILITY, WHETHER IN AN ACTION OF CONTRACT, TORT OR OTHERWISE, ARISING FROM, OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
+
