@@ -1,4 +1,4 @@
-var testosterone = require('testosterone')({title: 'SQLite store'}),
+var testosterone = require('testosterone')({title: 'SQLite store', sync: true}),
     assert = testosterone.assert,
     SQLITE = require('../../lib/stores/sqlite'),
     gently = global.GENTLY = new (require('gently'));
@@ -136,7 +136,7 @@ testosterone
     });
 
     gently.expect(store.db, 'execute', function (sql, cb) {
-      assert.equal(sql, "INSERT INTO dialect (original, translation) VALUES ('hello', 'hola')");
+      assert.equal(sql, "INSERT INTO dialect (original, translation, approved) VALUES ('hello', 'hola', 0)");
       assert.ok(cb);
       cb(null, []);
     });
@@ -154,19 +154,44 @@ testosterone
   .add('GIVEN a call to `set` \n' +
        '  WHEN no `callback` is given \n' +
        '  THEN it should provide with a default one \n' +
-       '  AND update the translations according to `query` and `update`', function () {
+       '  AND update the translations according to `query` and `translation`', function () {
 
     var store = SQLITE();
 
     store.collection = {};
 
     gently.expect(store.db, 'execute', function (sql, cb) {
-      assert.equal(sql, "UPDATE dialect SET translation = 'bar' WHERE original = 'foo'");
+      assert.equal(sql, "UPDATE dialect SET translation = 'bar', approved = 0 WHERE original = 'foo'");
       assert.ok(cb);
       cb('foo', 'bar');
     });
 
     store.set({original: 'foo'}, 'bar', function (err, doc) {
+      assert.equal(err, 'foo');
+      assert.deepEqual(doc, 'bar');
+    });
+  })
+
+  ////////////////////////////////////////////
+  // approve
+  ////////////////////////////////////////////
+
+  .add('GIVEN a call to `approve` \n' +
+       '  WHEN no `callback` is given \n' +
+       '  THEN it should provide with a default one \n' +
+       '  AND update the translations according to `query` and `approved`', function () {
+
+    var store = SQLITE();
+
+    store.collection = {};
+
+    gently.expect(store.db, 'execute', function (sql, cb) {
+      assert.equal(sql, "UPDATE dialect SET approved = 1 WHERE original = 'foo'");
+      assert.ok(cb);
+      cb('foo', 'bar');
+    });
+
+    store.approve({original: 'foo'}, true, function (err, doc) {
       assert.equal(err, 'foo');
       assert.deepEqual(doc, 'bar');
     });

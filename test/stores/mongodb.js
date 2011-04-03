@@ -97,11 +97,11 @@ testosterone
   .add('GIVEN a call to `add` \n' +
        '  WHEN no `callback` is given \n' +
        '  THEN it should provide with a default one \n' +
-       '  AND add the `translation` if is not on the store', function () {
+       '  AND add the unapproved `translation` if is not on the store', function () {
 
     var store = STORE(),
         original = {original: 'hello'},
-        new_doc = {original: 'hello', translation: 'hola'};
+        new_doc = {original: 'hello', translation: 'hola', approved: false};
 
     store.collection = {};
 
@@ -154,24 +154,53 @@ testosterone
   .add('GIVEN a call to `set` \n' +
        '  WHEN no `callback` is given \n' +
        '  THEN it should provide with a default one \n' +
-       '  AND update the translations according to `query` and `update`', function () {
+       '  AND update the translations according to `query` and `translation`', function () {
 
     var store = STORE(),
         original = {original: 'hello'},
         translation = {translation: 'hola'},
-        new_doc = {original: 'hello', translation: 'hola'};
+        new_doc = {original: 'hello', translation: 'hola', approved: false};
 
     store.collection = {};
 
     gently.expect(store.collection, 'update', function (query, update, options, cb) {
       assert.deepEqual(query, original);
-      assert.deepEqual(update, {'$set': translation});
+      assert.deepEqual(update, {'$set': {translation: 'hola', approved: false}});
       assert.deepEqual(options, {upsert: true});
       assert.ok(cb);
       cb('foo', new_doc);
     });
 
     store.set(original, translation, function (err, doc) {
+      assert.equal(err, 'foo');
+      assert.equal(doc, new_doc);
+    });
+  })
+
+  ////////////////////////////////////////////
+  // approve
+  ////////////////////////////////////////////
+
+  .add('GIVEN a call to `approve` \n' +
+       '  WHEN no `callback` is given \n' +
+       '  THEN it should provide with a default one \n' +
+       '  AND update the translations according to `query` and `approved`', function () {
+
+    var store = STORE(),
+        original = {original: 'hello', translation: 'hola'},
+        new_doc = {original: 'hello', translation: 'hola', approved: true};
+
+    store.collection = {};
+
+    gently.expect(store.collection, 'update', function (query, update, options, cb) {
+      assert.deepEqual(query, original);
+      assert.deepEqual(update, {'$set': {approved: true}});
+      assert.deepEqual(options, {});
+      assert.ok(cb);
+      cb('foo', new_doc);
+    });
+
+    store.approve(original, true, function (err, doc) {
       assert.equal(err, 'foo');
       assert.equal(doc, new_doc);
     });

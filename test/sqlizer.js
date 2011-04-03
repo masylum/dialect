@@ -12,6 +12,8 @@ testosterone
   .add('parseDoc', function () {
     assert.equal(sqlizer.parseDoc({j: 4}),                                              'j = 4');
     assert.equal(sqlizer.parseDoc({j: '4'}),                                            "j = '4'");
+    assert.equal(sqlizer.parseDoc({j: true}),                                           "j = 1");
+    assert.equal(sqlizer.parseDoc({j: false}),                                          "j = 0");
     assert.equal(sqlizer.parseDoc({j: {'$exists': true}, f: null}),                     'j IS NOT null AND f IS null');
     assert.equal(sqlizer.parseDoc({j: {'$exists': false}}),                             'j IS null');
     assert.equal(sqlizer.parseDoc({j: {'$ne': null}}),                                  'j IS NOT null');
@@ -80,6 +82,7 @@ testosterone
 
   .add('update', function () {
     assert.equal(sqlizer.update({}, {'$set': {j: 4}}).sql,             'UPDATE test SET j = 4');
+    assert.equal(sqlizer.update({}, {'$set': {j: 4, i: false}}).sql,   'UPDATE test SET j = 4, i = 0');
     assert.equal(sqlizer.update({}, {'$inc': {j: 2}}).sql,             'UPDATE test SET j = j + 2');
     assert.equal(sqlizer.update({d: 'foo'}, {'$set': {j: 'bar'}}).sql, "UPDATE test SET j = 'bar' WHERE d = 'foo'");
     assert.equal(sqlizer.update({d: 4, f: 3}, {'$inc': {j: 2}}).sql,   'UPDATE test SET j = j + 2 WHERE d = 4 AND f = 3');

@@ -51,7 +51,7 @@ testosterone
        '  THEN it should get the dictionary from the store \n' +
        '  AND cache it on memory', function () {
     gently.expect(dialect.store, 'get', function (query, cb) {
-      assert.deepEqual(query, {locale: 'es'});
+      assert.deepEqual(query, {locale: 'es', approved: true});
       assert.ok(query, cb);
       cb(null, [{original: 'hello', translation: 'hola'}]);
     });
@@ -65,7 +65,7 @@ testosterone
 
     // with plural and contexts
     gently.expect(dialect.store, 'get', function (query, cb) {
-      assert.deepEqual(query, {locale: 'es'});
+      assert.deepEqual(query, {locale: 'es', approved: true});
       assert.ok(query, cb);
       cb(null, [{original: 'hello', translation: 'hola', context: 'salute', plural: 1}]);
     });

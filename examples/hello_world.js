@@ -9,11 +9,12 @@ var dialect = require('..').dialect({
 
 dialect.connect(function () {
   console.log(_(original));
+
   dialect.set({original: original, locale: 'es'}, translation);
+  dialect.approve({original: original, locale: 'es'}, true);
 
   dialect.sync({interval: 3600}, function (err, foo) {
     console.log(_(original));
     console.log(_('Inexistant'));
-    process.exit();
   });
 });

@@ -54,7 +54,8 @@ Dialect is a painless nodejs module to manage your translations.
 * `config (key, value)`: Exposes configuration values.
 * `get (query)`: Gets a translation cached in memory.
 * `set (query, translation, callback)`: Sets a translation on the store.
-* `sync (locale, repeat, callback)`: Syncs the store with the memory cache.
+* `approve (approve?, query, callback)`: Approve or rejects a translation.
+* `sync (locale, repeat, callback)`: Syncs all the approved translations of the store to the memory cache.
 * `connect (callback)`: Connects to the database store.
 
 ### Plurals

@@ -47,7 +47,7 @@ testosterone
   // config
   ////////////////////////////////////////////
 
-  .add(' GIVEN a call to config \n' +
+  .add('GIVEN a call to config \n' +
        '  WHEN just param `key` is given \n' +
        '  THEN it should return `_option[key]`', function () {
     var options = {store: {mongodb: {}}, base_locale: 'en'},
@@ -187,6 +187,68 @@ testosterone
     });
 
     d.set({original: 'hello', locale: 'foo'}, translation, callback);
+  })
+
+  ////////////////////////////////////////////
+  // approve
+  ////////////////////////////////////////////
+
+  .add('GIVEN a call to `approve` \n' +
+       '  WHEN `query.original` or `query.locale` are missing \n' +
+       '  THEN an error should be thrown', function () {
+
+    var options = {locales: ['en', 'es'], store: {mongodb: {}}},
+        d = dialect(options);
+
+    assert.throws(function () {
+      d.approve(null, true);
+    });
+
+    assert.throws(function () {
+      d.approve({original: 'foo'}, true);
+    });
+
+    assert.throws(function () {
+      d.approve({locale: 'foo'}, true);
+    });
+
+    assert.throws(function () {
+      d.approve({original: 'foo', locale: 'foo'}, true);
+    });
+  })
+
+  .add('  WHEN `query.original` and `query.locale` are valid \n' +
+       '  THEN should approve the translation to the `store`', function () {
+
+    var store = {mongodb: {}},
+        query = {original: 'hello', locale: 'foo'},
+        translation = 'foola',
+        options = {locales: ['en', 'es'], store: store},
+        callback = function (err, data) {
+          assert.equal(err, 'foo');
+          assert.equal(data, 'bar');
+        },
+        d = dialect(options);
+
+    gently.expect(d.store, 'approve', 2, function (q, u, cb) {
+      assert.deepEqual(q, query);
+      assert.deepEqual(u, true);
+      assert.deepEqual(cb, callback);
+      cb('foo', 'bar');
+    });
+
+    d.approve({original: 'hello', locale: 'foo'}, true, callback);
+    d.approve({original: 'hello', locale: 'foo'}, 'fleiba', callback);
+
+    gently.expect(d.store, 'approve', 2, function (q, u, cb) {
+      assert.deepEqual(q, query);
+      assert.deepEqual(u, false);
+      assert.deepEqual(cb, callback);
+      cb('foo', 'bar');
+    });
+
+    d.approve({original: 'hello', locale: 'foo'}, '', callback);
+    d.approve({original: 'hello', locale: 'foo'}, false, callback);
   })
 
   ////////////////////////////////////////////
