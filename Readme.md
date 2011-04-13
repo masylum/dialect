@@ -142,11 +142,11 @@ To store a new translation, use the method `set`.
 
 Do you need a nice environment for your translators?
 
-Dialect http is an amazing web application to manage your translations.
+[dialect http](https://github.com/masylum/dialect-http) is an amazing http server to manage your translations.
 
 ## Test
 
-Dialect is heavily tested using [testosterone](http://www.github.com/masylum/testosterone)
+Dialect is heavily tested using [testosterone](https://www.github.com/masylum/testosterone)
 
     make
 
