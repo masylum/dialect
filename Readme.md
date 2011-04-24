@@ -42,12 +42,12 @@ Dialect is a painless nodejs module to manage your translations.
 * `store`: Object containing the store and their options
 
 ## Store options
-* `mongodb`: mongoDB storage.
+* `mongodb`
   * `database`: _dialect_
   * `host`: _127.0.0.1_
   * `port`: _27017_
   * `collection`: _translations_
-* `sqlite`: SQLite storage.
+* `sqlite`
   * `database`: _dialect.db_
   * `table`: _dialect_
 
