@@ -23,7 +23,7 @@ Dialect is a painless nodejs module to manage your translations.
 
 ## Example
 
-    var dialect = require('dialect').dialect({current_locale: 'es', store: 'mongodb'});
+    var dialect = require('dialect').dialect({current_locale: 'es', store: {mongodb: {}}});
 
     // connects to the store
     dialect.connect(function () {
@@ -41,13 +41,13 @@ Dialect is a painless nodejs module to manage your translations.
 * `locales`: Which locales are available on your application.
 * `store`: Object containing the store and their options
   * `mongodb`: mongoDB storage.
-    * database
-    * host
-    * port
-    * collection
+    * `database`: [dialect]
+    * `host`: [127.0.0.1]
+    * `port`: [27017]
+    * `collection`: [translations]
   * `sqlite`: SQLite storage.
-    * database
-    * table
+    * `database`: [dialect.db]
+    * `table`: [dialect]
 
 ## API
 
