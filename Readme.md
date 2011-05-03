@@ -14,6 +14,10 @@ Dialect is a painless nodejs module to manage your translations.
 
     npm install dialect
 
+## Tutorial screencast
+
+[Dealing with translations in nodejs](http://happynerds.tumblr.com/post/5161855930/dealing-with-translations-in-nodejs)
+
 ## Philosphy
 
 * Scalable: The translations should be available to any number of machines.
