@@ -3,7 +3,7 @@
   "description": "Translations manager for nodejs",
   "version": "1.0.1",
   "author": "Pau Ramon <masylum@gmail.com>",
-  "dependencies": {"mongodb": ">=0.7.9", "funk": ">=0.0.2"},
+  "dependencies": {"mongodb": ">=0.9.4", "funk": "1.0.1"},
   "repository" : {"type": "git" , "url": "http://github.com/masylum/dialect.git" },
   "main": "./",
   "engines": { "node": ">= 0.4.0" }
