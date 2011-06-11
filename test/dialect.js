@@ -6,7 +6,6 @@ var testosterone = require('testosterone')({title: 'Dialect core', sync: true}),
     _stubIO = function () {
       var io = {};
       gently.expect(gently.hijacked['./helpers/io'], 'IO', function () {
-        gently.restore(gently.hijacked['./helpers/io'], 'IO');
         return io;
       });
       return io;

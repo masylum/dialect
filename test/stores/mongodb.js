@@ -35,7 +35,12 @@ testosterone
       cb(null, db);
     });
 
+    // no collection yet
     gently.expect(store.db, 'collection', function (coll, cb) {
+      cb('blah', null);
+    });
+
+    gently.expect(store.db, 'createCollection', function (coll, cb) {
       cb('blah', 'bar');
     });
 
