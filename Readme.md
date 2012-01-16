@@ -51,6 +51,8 @@ Dialect is a painless nodejs module to manage your translations.
   * `host`: _127.0.0.1_
   * `port`: _27017_
   * `collection`: _translations_
+  * `username` (optional)
+  * `password` (optional)
 * `sqlite`
   * `database`: _dialect.db_
   * `table`: _dialect_
