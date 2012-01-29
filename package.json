@@ -1,7 +1,7 @@
 {
   "name": "dialect",
   "description": "Translations manager for nodejs",
-  "version": "1.0.2",
+  "version": "1.0.3",
   "author": "Pau Ramon <masylum@gmail.com>",
   "dependencies": {
     "mongodb": "0.9.4",
