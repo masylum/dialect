@@ -1,11 +1,10 @@
 {
   "name": "dialect",
   "description": "Translations manager for nodejs",
-  "version": "1.0.4",
+  "version": "1.0.5",
   "author": "Pau Ramon <masylum@gmail.com>",
   "dependencies": {
     "mongodb": "0.9.6-23",
-    "sqlite": "1.0.4",
     "funk": "1.0.1"
   },
   "devDependencies": {
