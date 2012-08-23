@@ -1,3 +1,4 @@
+[![build status](https://secure.travis-ci.org/masylum/dialect.png)](http://travis-ci.org/masylum/dialect)
            ,,    ,,             ,,
          `7MM    db           `7MM                    mm
            MM                   MM                    MM
